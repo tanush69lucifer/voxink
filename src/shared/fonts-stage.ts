@@ -1,0 +1,12 @@
+import './fonts-ui';
+import '@fontsource/bungee-outline/latin-400.css';
+import '@fontsource/bangers/latin-400.css';
+import '@fontsource/creepster/latin-400.css';
+import '@fontsource/fredoka/latin-600.css';
+import '@fontsource/fredoka/latin-700.css';
+import '@fontsource/pacifico/latin-400.css';
+import '@fontsource/playfair-display/latin-700.css';
+import '@fontsource/playfair-display/latin-700-italic.css';
+import '@fontsource/rubik-burned/latin-400.css';
+import '@fontsource/rubik-glitch/latin-400.css';
+import '@fontsource/rubik-wet-paint/latin-400.css';

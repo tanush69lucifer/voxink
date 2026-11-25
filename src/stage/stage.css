@@ -1,0 +1,182 @@
+/* VoxInk stage. Four show styles share one set of motions; each style swaps ground, ink, type and panel look. */
+@property --mood { syntax: '<color>'; inherits: true; initial-value: #2b2342; }
+:root { --bg:#121015; --ink:#f4ecdc; --paper:#f4ecdc; --pink:#121015; --accent:#ffd400; --hot:#ff4d2e; --ice:#8fe9ff; --good:#3dffa0;
+  --fd:'Bungee', Impact, sans-serif; --fw:'Archivo Black', sans-serif; --fh:'Caveat Brush', cursive; --dots:rgba(244,236,220,.07); --mood:#2b2342; }
+[data-style=cinema] { --bg:#0b0d12; --ink:#efe8da; --paper:#16181f; --pink:#efe8da; --accent:#e8c27a; --hot:#e07a5f; --fd:'Playfair Display', Georgia, serif; --fw:'Playfair Display', Georgia, serif; --fh:'Playfair Display', Georgia, serif; --dots:transparent; }
+[data-style=news] { --bg:#f6f5f1; --ink:#14161a; --paper:#ffffff; --pink:#14161a; --accent:#0b5cad; --hot:#d62828; --good:#0f7a4a; --fd:'Archivo Black', sans-serif; --fw:'Archivo Black', sans-serif; --fh:'Space Grotesk', sans-serif; --dots:transparent; }
+[data-style=minimal] { --bg:#f4ecdc; --ink:#121015; --paper:#fffaf0; --pink:#121015; --accent:#121015; --hot:#d6361b; --good:#0f7a4a; --fd:'Space Grotesk', sans-serif; --fw:'Space Grotesk', sans-serif; --fh:'Space Grotesk', sans-serif; --dots:transparent; }
+
+* { box-sizing: border-box; min-width: 0 }
+html, body { height: 100%; margin: 0 }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 'Space Grotesk', system-ui, sans-serif; overflow: hidden; cursor: none }
+#stage { position: fixed; inset: 0; overflow: hidden; transition: --mood 1.4s ease, background-color .8s }
+#mood { position: absolute; inset: -25%; background: radial-gradient(45% 45% at var(--mx,50%) var(--my,50%), var(--mood), transparent 70%); opacity: .8; transition: --mood 1.4s ease }
+[data-style=news] #mood, [data-style=minimal] #mood { opacity: .12 }
+#dots { position: absolute; inset: 0; background-image: radial-gradient(var(--dots) 1.1px, transparent 1.6px); background-size: 16px 16px }
+[data-style=cinema] #dots { background: radial-gradient(120% 80% at 50% 120%, rgba(232,194,122,.12), transparent 60%) }
+
+/* idle + cleared */
+#idle { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; z-index: 9; transition: opacity .6s }
+#idle h1 { font-family: var(--fd); font-size: clamp(56px, 9vw, 140px); margin: 0; line-height: .95; color: var(--ink) }
+#idle h1 em { font-style: normal; color: var(--accent) }
+#idle p { margin: 12px 0 0; font-size: 18px; opacity: .65 }
+#idle.hide { opacity: 0; pointer-events: none }
+#stage.cleared .w, #stage.cleared #scene, #stage.cleared #cap, #stage.cleared #chapter { opacity: 0 !important; transition: opacity .4s }
+
+/* live words */
+.w { position: absolute; transform: translate(-50%,-50%) rotate(var(--r,0deg)); white-space: nowrap; pointer-events: none; line-height: 1; z-index: 3 }
+.w .in { display: inline-block; position: relative }
+.w .l { display: inline-block; white-space: pre }
+.w.out { animation: out .7s ease forwards }
+@keyframes out { to { opacity: 0; filter: blur(10px) } }
+@keyframes pop { 0% { transform: scale(0) rotate(-20deg) } 100% { transform: none } }
+@keyframes fadeL { to { opacity: 1 } }
+@keyframes rise { from { transform: translateY(.6em); opacity: 0 } to { transform: none; opacity: 1 } }
+.fx-big .in { font-family: Bungee; color: var(--accent); font-size: 1.35em; text-shadow: .04em .04em 0 var(--hot), .09em .09em 0 #000; animation: pop .7s cubic-bezier(.2,1.7,.4,1) both }
+.fx-tiny .in { font-weight: 700; font-size: .3em; border: 2px dashed var(--accent); border-radius: 50%; padding: 1.3em 1.5em; animation: shrink .9s ease both }
+@keyframes shrink { 0% { transform: scale(5); opacity: 0 } 100% { transform: none; opacity: 1 } }
+.fx-fast .in { font-family: Bungee; color: var(--ice); transform: skewX(-18deg); text-shadow: -.35em 0 0 rgba(143,233,255,.22), -.7em 0 0 rgba(143,233,255,.1); animation: zoom .45s cubic-bezier(.1,.9,.2,1) both }
+@keyframes zoom { 0% { transform: translateX(-70vw) skewX(-35deg) } 100% { transform: skewX(-18deg) } }
+.fx-slow .l { font-family: Fredoka; color: #c7b8ff; opacity: 0; animation: fadeL 1s ease forwards; animation-delay: calc(var(--i)*280ms) }
+.fx-ice .l { font-family: Bungee; background: linear-gradient(180deg,#fff,var(--ice) 55%,#2f8fcf); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 .12em rgba(143,233,255,.8)); animation: shiver .11s infinite alternate; animation-delay: calc(var(--i)*-37ms) }
+@keyframes shiver { from { transform: translateX(-1.5px) } to { transform: translateX(1.5px) } }
+.fx-fire .l { font-family: 'Rubik Burned'; background: linear-gradient(0deg,#ff2d00,#ff8a00 50%,#ffe14d); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 .15em rgba(255,100,0,.7)); transform-origin: bottom; animation: flick .16s infinite alternate; animation-delay: calc(var(--i)*-53ms) }
+@keyframes flick { from { transform: scaleY(1) } to { transform: scaleY(1.1) translateY(-.03em) } }
+.fx-up .l { font-family: Bungee; color: var(--good); animation: climb .55s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(var(--i)*70ms) }
+.fx-up .in::after { content: '\2197'; font-family: Bungee; color: var(--good); margin-left: .15em; display: inline-block; transform: translateY(calc(var(--n)*-.18em)) }
+@keyframes climb { 0% { transform: translateY(1em); opacity: 0 } 100% { transform: translateY(calc(var(--i)*-.18em)); opacity: 1 } }
+.fx-down .l { font-family: Bungee; color: #ff6b6b; animation: drop 1.2s cubic-bezier(.5,0,.75,0) both; animation-delay: calc(var(--i)*90ms + .35s) }
+@keyframes drop { 0% { transform: none } 70% { transform: translateY(1.1em) rotate(var(--rr)) } 82% { transform: translateY(.85em) rotate(var(--rr)) } 100% { transform: translateY(1.1em) rotate(var(--rr)) } }
+.fx-scary .in { font-family: Creepster; color: #ff2a2a; letter-spacing: .04em; text-shadow: 0 0 .25em #a00; animation: jit .08s infinite }
+@keyframes jit { 0% { transform: translate(1px,-1px) } 50% { transform: translate(-2px,1px) } 100% { transform: translate(1px,2px) } }
+.fx-love .in { font-family: Pacifico; color: #ff5fa2; animation: beat .9s infinite }
+@keyframes beat { 0%,100% { transform: scale(1) } 15% { transform: scale(1.18) } 30% { transform: scale(1) } 45% { transform: scale(1.1) } }
+.fx-money .l { font-family: Bungee; background: linear-gradient(100deg,#a8740a,#ffe27a 40%,#fffbe0 50%,#ffd24a 60%,#a8740a); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 1.8s linear infinite }
+@keyframes shine { from { background-position: 100% 0 } to { background-position: -200% 0 } }
+.fx-boom .in { font-family: Bangers; letter-spacing: .06em; color: #121015; background: var(--accent); padding: .55em .9em; font-size: 1.1em; clip-path: var(--burst); animation: pop .5s cubic-bezier(.2,2,.4,1) both }
+.fx-break .l { font-family: 'Archivo Black'; animation: crack 1.1s cubic-bezier(.6,0,.4,1) both; animation-delay: .45s }
+@keyframes crack { to { transform: translate(var(--dx),var(--dy)) rotate(var(--rr)); opacity: .8 } }
+.fx-wave .l { font-family: 'Rubik Wet Paint'; color: #4fc3ff; animation: wave 1.4s ease-in-out infinite; animation-delay: calc(var(--i)*-120ms) }
+@keyframes wave { 0%,100% { transform: translateY(-.14em) } 50% { transform: translateY(.14em) } }
+.fx-loud .in { font-family: Bungee; color: var(--hot); font-size: 1.3em; animation: shout .5s cubic-bezier(.2,1.6,.4,1) both }
+@keyframes shout { 0% { transform: scale(.2) } 100% { transform: scale(1.45,1) } }
+.fx-quiet .in { font-family: 'Caveat Brush'; opacity: .6; font-size: .6em; letter-spacing: .3em; animation: rise 1.6s ease both }
+.fx-idea .in { font-family: Bungee; color: #fff6a8; animation: bulb 1.3s both }
+@keyframes bulb { 0%,20%,40% { opacity: .1; text-shadow: none } 10%,30%,60%,100% { opacity: 1; text-shadow: 0 0 .2em var(--accent), 0 0 .7em #ffb400 } }
+.fx-happy .l { font-family: Fredoka; font-weight: 700; color: hsl(calc(var(--i)*47 + 10),95%,60%); animation: bounce .5s ease-in-out infinite alternate; animation-delay: calc(var(--i)*-90ms) }
+@keyframes bounce { from { transform: translateY(0) } to { transform: translateY(-.22em) rotate(-6deg) } }
+.fx-sad .l { font-family: 'Caveat Brush'; color: #8a93a6; animation: droop 2.2s ease both; animation-delay: calc(var(--i)*120ms) }
+@keyframes droop { to { transform: translateY(calc(var(--i)*.07em)) rotate(9deg) } }
+.fx-tech .in { font-family: 'Rubik Glitch'; color: #e8fbff; text-shadow: .05em 0 #ff2a6d, -.05em 0 #05d9e8; animation: glitch 1.4s steps(2) infinite }
+@keyframes glitch { 0%,86% { transform: none; clip-path: none } 89% { transform: translate(.06em,-.02em); clip-path: inset(15% 0 45% 0) } 92% { transform: translate(-.06em,.03em); clip-path: inset(60% 0 4% 0) } 95% { transform: none; clip-path: none } }
+.fx-secret .in { font-family: 'Archivo Black' }
+.fx-secret .in::after { content: ''; position: absolute; inset: -.08em -.15em; background: var(--accent); transform-origin: right; animation: redact 1.1s .7s cubic-bezier(.7,0,.3,1) both }
+@keyframes redact { to { transform: scaleX(0) } }
+.fx-long .in { font-family: 'Archivo Black'; color: #c7b8ff; animation: stretch 1.6s ease both }
+@keyframes stretch { from { letter-spacing: -.06em } to { letter-spacing: .45em } }
+.fx-spin .in { font-family: Bungee; color: #ff9f1c; animation: twirl 1.1s cubic-bezier(.3,1.4,.5,1) both }
+@keyframes twirl { from { transform: rotate(-540deg) scale(0) } to { transform: none } }
+.fx-together .l { font-family: Bungee; color: var(--good); animation: conv 1.1s cubic-bezier(.2,1,.3,1) both }
+@keyframes conv { from { transform: translate(var(--dx),var(--dy)) rotate(var(--rr)); opacity: 0 } to { transform: none; opacity: 1 } }
+.fx-hero .in { font-family: Bungee; background: var(--accent); color: #121015; padding: .12em .38em .06em; box-shadow: .08em .08em 0 var(--hot), .16em .16em 0 #000; animation: slap .45s cubic-bezier(.2,1.8,.4,1) both }
+@keyframes slap { 0% { transform: scale(2.4) rotate(14deg); opacity: 0 } 100% { transform: none; opacity: 1 } }
+.fx-plain .in { font-family: 'Archivo Black'; opacity: .9; font-size: .55em; animation: rise .5s ease both }
+
+/* Non-zine styles keep the motion, drop the costume: one family, two inks. */
+[data-style=cinema] .w .in, [data-style=cinema] .w .l, [data-style=news] .w .in, [data-style=news] .w .l, [data-style=minimal] .w .in, [data-style=minimal] .w .l {
+  font-family: var(--fw) !important; background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important;
+  color: var(--ink) !important; text-shadow: none !important; filter: none !important; box-shadow: none !important; clip-path: none !important; padding: 0 !important; border: 0 !important }
+[data-style=cinema] .w .in { font-style: italic; letter-spacing: .01em }
+[data-style=cinema] .w.fx-hero .in, [data-style=cinema] .w.fx-big .in, [data-style=cinema] .w.fx-money .l { color: var(--accent) !important }
+[data-style=news] .w.fx-hero .in, [data-style=news] .w.fx-up .l, [data-style=news] .w.fx-big .in { color: var(--accent) !important }
+[data-style=news] .w.fx-down .l, [data-style=news] .w.fx-scary .in, [data-style=news] .w.fx-fire .l { color: var(--hot) !important }
+[data-style=news] .w.fx-hero .in { border-bottom: .08em solid var(--accent) !important }
+[data-style=minimal] .w .in { font-weight: 700; letter-spacing: -.03em }
+[data-style=minimal] .w.fx-hero .in { color: var(--hot) !important }
+
+.pt { position: absolute; z-index: 2; pointer-events: none; font-family: Bungee; animation: fly 1.3s cubic-bezier(.1,.8,.3,1) forwards }
+@keyframes fly { 0% { transform: translate(-50%,-50%) scale(.4); opacity: 1 } 100% { transform: translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rr)) scale(1); opacity: 0 } }
+[data-style=news] .pt, [data-style=minimal] .pt { display: none }
+
+/* scenes */
+#scene { position: absolute; left: 50%; top: 48%; transform: translate(-50%,-50%); width: min(64vw,900px); display: grid; place-items: center; pointer-events: none; z-index: 4 }
+.sc { grid-area: 1/1; animation: scIn .65s cubic-bezier(.2,1.5,.4,1) both }
+.sc.out { animation: scOut .5s ease forwards }
+@keyframes scIn { from { transform: scale(.6) rotate(-6deg); opacity: 0 } to { transform: rotate(var(--tilt,-1.5deg)); opacity: 1 } }
+@keyframes scOut { from { transform: rotate(var(--tilt,-1.5deg)) } to { transform: translateY(-30px) scale(.9); opacity: 0 } }
+[data-style=cinema] .sc { animation: cIn 1.1s ease both; --tilt: 0deg !important }
+@keyframes cIn { from { opacity: 0; filter: blur(14px); transform: scale(1.04) } to { opacity: 1; filter: none; transform: none } }
+[data-style=news] .sc, [data-style=minimal] .sc { animation: nIn .45s cubic-bezier(.2,.9,.2,1) both; --tilt: 0deg !important }
+@keyframes nIn { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: none } }
+
+.panel { background: var(--paper); color: var(--pink); border: 4px solid #000; box-shadow: 14px 14px 0 var(--accent), 14px 14px 0 4px #000; padding: clamp(18px,2.4vw,34px) clamp(22px,3vw,44px); text-align: center; max-width: 100% }
+[data-style=cinema] .panel { background: rgba(22,24,31,.72); border: 1px solid rgba(232,194,122,.5); box-shadow: 0 30px 80px rgba(0,0,0,.6); backdrop-filter: blur(8px) }
+[data-style=news] .panel { border: 0; border-top: 6px solid var(--accent); box-shadow: 0 12px 40px rgba(0,0,0,.12); text-align: left }
+[data-style=minimal] .panel { border: 0; box-shadow: none; background: transparent }
+.kick { font-family: var(--fh); font-size: clamp(22px,2.4vw,36px); line-height: 1.15 }
+[data-style=news] .kick { font-size: clamp(18px,1.8vw,26px); font-weight: 500 }
+.big { font-family: var(--fd); font-size: clamp(56px,10vw,160px); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums }
+.chip { display: inline-block; margin-top: .5em; font-family: Bangers, var(--fd); letter-spacing: .06em; font-size: clamp(22px,2.6vw,40px); background: var(--hot); color: #fff; padding: .1em .55em; border: 3px solid #000; transform: rotate(2deg) }
+[data-style=cinema] .chip, [data-style=news] .chip, [data-style=minimal] .chip { border: 0; transform: none; font-family: var(--fw); font-size: clamp(16px,1.6vw,24px); letter-spacing: 0 }
+.from { font-family: var(--fw); font-size: clamp(18px,1.8vw,28px); opacity: .6 }
+.src { margin-top: .6em; font-size: 15px; opacity: .6; font-family: 'Space Grotesk', sans-serif }
+.ring { width: clamp(200px,24vw,340px); aspect-ratio: 1; position: relative; display: grid; place-items: center }
+.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg) }
+.ring .big { font-size: clamp(48px,6.5vw,100px) }
+.ring .kick { font-size: clamp(15px,1.5vw,22px); max-width: 68%; margin: 0 auto; line-height: 1.15; text-wrap: balance }
+.split { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); width: 100% }
+.split > div { padding: clamp(16px,2vw,30px); border: 4px solid #000; display: flex; flex-direction: column; justify-content: center; gap: .3em }
+.split .old { background: #2a2730; color: #a9a3b5; transform: rotate(-2deg) }
+.split .old b { text-decoration: line-through; text-decoration-color: var(--hot); text-decoration-thickness: .12em }
+.split .new { background: var(--accent); color: #121015; transform: rotate(1.5deg); box-shadow: 10px 10px 0 #000 }
+[data-style=news] .split > div, [data-style=minimal] .split > div, [data-style=cinema] .split > div { transform: none; box-shadow: none; border-width: 0 }
+[data-style=news] .split .new { color: #fff }
+.split b { font-family: var(--fw); font-weight: 400; font-size: clamp(22px,2.6vw,42px); line-height: 1.05 }
+.split small { font-family: var(--fh); font-size: clamp(18px,1.6vw,26px) }
+.split .vs { align-self: center; font-family: Bangers, var(--fd); font-size: clamp(40px,5vw,80px); color: var(--hot); margin: 0 -.3em; z-index: 1; transform: rotate(-8deg); border: 0 !important; padding: 0 !important; background: none !important }
+.tl { position: relative; width: min(60vw,820px); height: clamp(120px,12vw,170px) }
+.tl .bar { position: absolute; left: 0; right: 0; top: 78%; height: 6px; background: currentColor }
+.pin { position: absolute; top: 78%; transform: translate(-50%,-100%); text-align: center }
+.pin b, .pin i { animation: rise .6s both }
+.pin b { display: block; font-family: var(--fd); font-size: clamp(26px,3.2vw,52px); padding: 0 .25em; border: 3px solid currentColor }
+.pin i { display: block; width: 4px; height: 22px; background: currentColor; margin: 0 auto }
+.pin.now b { background: var(--accent); color: #121015; font-size: clamp(34px,4.4vw,70px) }
+.qmark { font-family: Bangers, var(--fd); font-size: clamp(120px,18vw,300px); line-height: .8; color: var(--accent); -webkit-text-stroke: 4px #000; text-shadow: 10px 10px 0 #000; animation: wob 2s ease-in-out infinite }
+[data-style=cinema] .qmark, [data-style=news] .qmark, [data-style=minimal] .qmark { -webkit-text-stroke: 0; text-shadow: none }
+@keyframes wob { 50% { transform: rotate(8deg) } }
+.qtext { font-family: var(--fh); font-size: clamp(26px,3.2vw,52px); line-height: 1.1; max-width: 24ch; text-align: center; text-wrap: balance }
+.globe-wrap { display: grid; justify-items: center; gap: 6px }
+.globe-wrap canvas { width: min(46vh,520px) !important; height: min(46vh,520px) !important; filter: drop-shadow(0 30px 60px rgba(0,0,0,.45)) }
+.globe-wrap .kick { color: var(--ink) }
+.photo { background: var(--paper); padding: 14px 14px 10px; border: 4px solid #000; box-shadow: 14px 14px 0 var(--accent), 14px 14px 0 4px #000; max-width: min(64vw,900px) }
+.photo img { display: block; width: 100%; max-height: 56vh; object-fit: cover }
+.photo figcaption { font-family: var(--fh); font-size: clamp(20px,2vw,30px); color: var(--pink); padding-top: 6px; display: flex; justify-content: space-between; gap: 20px; align-items: baseline }
+.photo figcaption small { font: 13px 'Space Grotesk', sans-serif; opacity: .65 }
+[data-style=cinema] .photo { border: 0; padding: 0; background: none; box-shadow: 0 40px 100px rgba(0,0,0,.7) }
+[data-style=cinema] .photo figcaption { color: var(--ink); padding: 10px 4px }
+.iconsc { display: grid; justify-items: center; gap: 10px; color: var(--accent) }
+.iconsc svg { width: clamp(160px,22vw,300px); height: auto; filter: drop-shadow(10px 10px 0 #000) }
+[data-style=cinema] .iconsc svg, [data-style=news] .iconsc svg, [data-style=minimal] .iconsc svg { filter: none }
+.iconsc .kick { color: var(--ink); text-transform: lowercase }
+
+/* chapter wipe + tag */
+#wipe { position: absolute; inset: 0; z-index: 8; pointer-events: none; display: grid; place-items: center; visibility: hidden }
+#wipe.go { visibility: visible }
+#wipe .band { position: absolute; left: -20%; right: -20%; top: 28%; height: 44%; background: var(--accent); border-block: 6px solid #000; transform: rotate(-4deg) translateX(-120%) }
+#wipe.go .band { animation: band 1.9s cubic-bezier(.7,0,.3,1) forwards }
+@keyframes band { 0% { transform: rotate(-4deg) translateX(-120%) } 30%,70% { transform: rotate(-4deg) translateX(0) } 100% { transform: rotate(-4deg) translateX(120%) } }
+#wipe .t { position: relative; text-align: center; color: #121015; opacity: 0 }
+[data-style=news] #wipe .t { color: #fff }
+#wipe.go .t { animation: wt 1.9s ease forwards }
+@keyframes wt { 0%,22% { opacity: 0; transform: scale(.8) } 32%,66% { opacity: 1; transform: none } 80%,100% { opacity: 0; transform: translateX(30vw) } }
+#wipe .num { font-family: 'Bungee Outline', var(--fd); font-size: clamp(40px,6vw,96px); line-height: 1 }
+#wipe .name { font-family: var(--fd); font-size: clamp(40px,7vw,120px); line-height: 1; max-width: 90vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+#chapter { position: absolute; left: clamp(14px,2vw,28px); top: 22px; z-index: 6; display: none; align-items: baseline; gap: .5em; font-family: var(--fw); font-size: clamp(14px,1.3vw,20px); background: var(--paper); color: var(--pink); padding: .3em .7em; border: 3px solid #000; box-shadow: 5px 5px 0 var(--accent); transform: rotate(-1.5deg) }
+[data-style=cinema] #chapter, [data-style=news] #chapter, [data-style=minimal] #chapter { border: 0; box-shadow: none; transform: none; background: transparent; color: var(--ink) }
+#chapter span { font-family: var(--fd); color: var(--hot) }
+#cap { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); width: min(70vw,980px); text-align: center; z-index: 6; font-size: clamp(16px,1.5vw,22px); line-height: 1.35; opacity: .85; text-wrap: balance }
+#cap i { opacity: .62 }
+#cap.off { display: none }
+#mark { position: absolute; right: 28px; bottom: 24px; font-family: Bungee, sans-serif; font-size: 18px; opacity: .55; z-index: 6 }
+#mark em { font-style: normal; color: var(--accent) }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important } }

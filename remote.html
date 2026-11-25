@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VoxInk — Remote</title>
+<style>
+  body { padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) }
+  .pad { display: grid; gap: 14px; max-width: 480px; margin: 0 auto; padding: 18px 0 }
+  .pad .btn { min-height: 84px; font-size: 22px; width: 100% }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
+</style>
+</head>
+<body>
+<div class="pad">
+  <div class="row" style="justify-content:space-between"><span class="logo">Vox<em>Ink</em></span><span id="conn" class="badge" style="background:#6b6478;color:#fff">Connecting</span></div>
+  <div class="card"><div class="muted">Chapter</div><div id="chap" style="font-family:Bungee,sans-serif;font-size:24px">—</div><div class="muted" id="q">Queue: 0</div></div>
+  <button class="btn y" data-a="show" type="button">Show next</button>
+  <button class="btn ghost" data-a="skip" type="button">Skip</button>
+  <div class="two"><button class="btn ghost" data-a="prev" type="button">‹ Chapter</button><button class="btn ghost" data-a="next" type="button">Chapter ›</button></div>
+  <button class="btn r" data-a="clear" type="button" id="clr">Clear screen</button>
+</div>
+<script type="module" src="/src/remote/main.ts"></script>
+</body>
+</html>

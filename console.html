@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VoxInk — Console</title>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="/">Vox<em>Ink</em></a>
+  <nav class="nav" aria-label="Main"><a href="/#talk">Studio</a><a href="/#brain">Brain</a><a href="/#runs">Engines</a><a href="/console.html" aria-current="page">Console</a></nav>
+  <strong id="talkTitle"></strong>
+  <span id="liveTag" class="badge" style="background:#6b6478;color:#fff">OFF AIR</span>
+  <span class="grow"></span>
+  <div class="seg" role="group" aria-label="Engine"><button type="button" data-engine="free">Free engine</button><button type="button" data-engine="paid">Paid engine</button></div>
+  <button type="button" class="btn ghost" id="safeBtn" aria-pressed="false">Safe mode off</button>
+  <button type="button" class="btn ghost" id="reviewBtn" aria-pressed="false">Auto-show</button>
+  <button type="button" class="btn r big" id="clearBtn">Clear screen (K)</button>
+</header>
+
+<main class="wrap" id="console">
+  <section class="card" style="flex:1 1 300px" aria-labelledby="h-tr">
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <h2 id="h-tr" style="margin:0">Live transcript</h2>
+      <span class="muted" id="earsName"></span>
+    </div>
+    <div class="row" style="margin-bottom:12px">
+      <button type="button" class="btn y big" id="micBtn">Start mic (Space)</button>
+      <button type="button" class="btn ghost" id="demoBtn">Run demo (D)</button>
+      <button type="button" class="btn ghost" id="stageBtn">Open stage window</button>
+    </div>
+    <form id="sayForm" class="row" style="margin-bottom:12px"><label class="sr" for="say">Type a line</label><input id="say" placeholder="Type a line and press Enter (T)" autocomplete="off" style="flex:1"></form>
+    <div id="transcript" style="font-size:16px;line-height:1.6;max-height:46vh;overflow:auto"></div>
+    <p class="muted" id="brainHit" style="border-top:2px dashed var(--line);padding-top:10px;margin:12px 0 0"></p>
+  </section>
+
+  <section style="flex:2 1 520px;display:flex;flex-direction:column;gap:16px" aria-label="Show">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">On stage now</h2><span class="muted" id="nowMeta">Nothing yet</span></div>
+      <div id="nowCard" style="min-height:120px;display:grid;place-items:center;background:#121015;border:2px solid #000;padding:16px;text-align:center"></div>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">Up next</h2><span class="muted" id="queueNote"></span></div>
+      <ul id="queue" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px"></ul>
+    </div>
+  </section>
+
+  <aside style="flex:1 1 280px;display:flex;flex-direction:column;gap:16px">
+    <section class="card" aria-labelledby="h-ch"><h2 id="h-ch">Chapters</h2><ol id="chapters" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px"></ol></section>
+    <section class="card" aria-labelledby="h-sp">
+      <h2 id="h-sp" style="margin-bottom:4px">Speed, words to screen</h2>
+      <p class="muted" style="margin:0 0 12px">Measured live: from the moment words arrive to the moment the stage draws them.</p>
+      <div id="speed"></div>
+    </section>
+    <section class="paper" aria-labelledby="h-rm">
+      <h2 id="h-rm" style="margin:0 0 6px;font-size:16px">Phone remote</h2>
+      <p style="margin:0 0 10px;font-size:14px;line-height:1.45">Open this on your phone (same Wi-Fi) for Show, Skip, Clear and chapters in your pocket.</p>
+      <div id="remoteUrls" style="font-weight:700;font-size:14px;word-break:break-all"></div>
+    </section>
+  </aside>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="/src/console/main.ts"></script>
+</body>
+</html>

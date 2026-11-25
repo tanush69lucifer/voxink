@@ -1,0 +1,47 @@
+/* Shared look for Studio, Console and Remote: ink-black app, paper cards, marker yellow. */
+:root { color-scheme: dark; --bg:#121015; --bar:#17151b; --card:#1c1a21; --card2:#24212a; --line:#2b2834; --line2:#34303c; --ink:#f4ecdc; --dim:rgba(244,236,220,.72); --paper:#f4ecdc; --marker:#ffd400; --hot:#ff4d2e; --good:#3dffa0; --bad:#ff6b6b }
+* { box-sizing: border-box; min-width: 0 }
+html, body { margin: 0 }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 'Space Grotesk', system-ui, sans-serif; min-height: 100vh }
+a { color: var(--marker) } a:hover { color: #fff }
+button, input, select, textarea { font: inherit; color: inherit }
+:focus-visible { outline: 3px solid var(--marker); outline-offset: 2px }
+.logo { font-family: Bungee, sans-serif; font-size: 22px; text-decoration: none; color: var(--ink) }
+.logo em { font-style: normal; color: var(--marker) }
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 12px 20px; border-bottom: 2px solid var(--line); background: var(--bar); position: sticky; top: 0; z-index: 5 }
+.nav { display: flex; flex-wrap: wrap; gap: 2px; font-weight: 700; font-size: 15px }
+.nav a { color: var(--ink); text-decoration: none; padding: 10px 12px; min-height: 44px; display: inline-flex; align-items: center }
+.nav a[aria-current=page] { background: var(--marker); color: #121015 }
+.grow { flex: 1 }
+.btn { min-height: 44px; padding: 0 16px; border: 2px solid #000; background: var(--paper); color: #121015; font-weight: 700; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; box-shadow: 3px 3px 0 #000 }
+.btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000 }
+.btn.y { background: var(--marker) } .btn.r { background: var(--hot); color: #fff } .btn.g { background: var(--good) }
+.btn.ghost { background: transparent; color: var(--ink); border-color: #6b6478; box-shadow: none }
+.btn.big { min-height: 52px; font-size: 16px; padding: 0 22px; border-width: 3px; box-shadow: 4px 4px 0 #000 }
+.btn[disabled] { opacity: .45; cursor: not-allowed }
+.seg { display: inline-flex; border: 2px solid var(--paper) }
+.seg button { min-height: 44px; padding: 0 14px; border: 0; background: transparent; font-weight: 700; font-size: 14px; cursor: pointer }
+.seg button[aria-pressed=true] { background: var(--paper); color: #121015 }
+.card { background: var(--card); border: 2px solid var(--line); padding: 18px }
+.card h2 { margin: 0 0 12px; font-size: 17px }
+.paper { background: var(--paper); color: #121015; border: 3px solid #000; box-shadow: 6px 6px 0 var(--marker); padding: 18px }
+.paper a { color: #121015 }
+.muted { color: var(--dim); font-size: 14px }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center }
+.wrap { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; max-width: 1440px; margin: 0 auto }
+.item { background: var(--card2); border: 2px solid var(--line2); padding: 10px 12px }
+.badge { font-size: 12px; font-weight: 700; padding: 3px 8px; border: 2px solid #000; color: #121015; background: var(--marker); white-space: nowrap }
+input[type=text], input:not([type]), textarea, select { width: 100%; font-size: 16px; padding: 10px 12px; border: 2px solid var(--line2); background: #0f0d12; color: var(--ink); border-radius: 0 }
+textarea { resize: vertical; line-height: 1.45 }
+label.f { display: grid; gap: 6px; font-weight: 700; font-size: 14px }
+label.f small { font-weight: 400; color: var(--dim) }
+table { width: 100%; border-collapse: collapse; font-size: 15px }
+th { text-align: left; font-weight: 500; font-size: 13px; color: var(--dim); padding: 8px 10px; border-bottom: 2px solid var(--line) }
+td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap }
+.ok { color: var(--good); font-weight: 700 } .warn { color: var(--marker); font-weight: 700 } .err { color: var(--bad); font-weight: 700 }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: var(--paper); color: #121015; border: 3px solid #000; box-shadow: 5px 5px 0 var(--hot); padding: 10px 16px; font-weight: 500; max-width: min(92vw,560px); opacity: 0; transition: .3s; pointer-events: none; z-index: 50 }
+.toast.on { opacity: 1; transform: translateX(-50%) }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0) }
+.scroll { overflow-x: auto }
+@media (max-width: 600px) { .top { position: static; padding: 10px 14px } .wrap { padding: 14px } }

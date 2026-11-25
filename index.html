@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VoxInk — Studio</title>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="/">Vox<em>Ink</em></a>
+  <nav class="nav" aria-label="Main">
+    <a href="#talk" data-tab="talk">Studio</a><a href="#brain" data-tab="brain">Brain</a><a href="#runs" data-tab="runs">Engines</a><a href="#setup" data-tab="setup">Setup</a><a href="/console.html">Console</a>
+  </nav>
+  <span class="grow"></span>
+  <a class="btn r big" href="/console.html">Go live</a>
+</header>
+
+<main style="max-width:1320px;margin:0 auto;padding:28px 20px 48px">
+
+  <section id="tab-talk" hidden>
+    <div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:22px">
+      <div style="flex:1 1 420px">
+        <label class="f"><span class="sr">Talk title</span><input id="tTitle" style="font-family:Bungee,sans-serif;font-size:32px;background:transparent;border:0;border-bottom:2px dashed var(--line2);padding:4px 0"></label>
+        <label class="f" style="margin-top:8px"><span class="sr">Audience</span><input id="tAud" placeholder="Who is in the room?" style="background:transparent;border:0;padding:4px 0;color:var(--dim)"></label>
+      </div>
+      <div class="row"><button class="btn ghost" id="loadSample" type="button">Load sample pitch</button><a class="btn y big" href="#runs">See rehearsals</a></div>
+    </div>
+
+    <h2 style="font-size:17px;margin:0 0 12px">Show style</h2>
+    <div id="styles" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px"></div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Chapters</h2>
+        <span class="muted">Say a chapter's words and VoxInk moves on by itself. Arrow keys work too.</span>
+      </div>
+      <div id="chapters" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px"></div>
+      <button class="btn ghost" id="addCh" type="button" style="margin-top:14px">Add chapter</button>
+    </div>
+  </section>
+
+  <section id="tab-brain" hidden>
+    <div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:22px">
+      <div><h1 style="margin:0 0 6px;font-family:Bungee,sans-serif;font-size:40px;line-height:1.05">Brain</h1>
+      <p class="muted" style="margin:0;font-size:17px;max-width:62ch">Everything VoxInk knows about you and your work. It stays on this computer. Numbers it finds become visuals that appear instantly when you mention them.</p></div>
+    </div>
+    <div class="row" style="align-items:stretch;gap:20px">
+      <section class="card" style="flex:1 1 320px" aria-labelledby="h-src">
+        <h2 id="h-src">Sources</h2>
+        <ul id="sources" style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:10px"></ul>
+        <form id="addSrc" style="display:grid;gap:10px;border:2px dashed #6b6478;padding:14px">
+          <label class="f">Name<input id="sName" placeholder="e.g. Pitch deck v5"></label>
+          <label class="f">Text <small>Paste anything: deck text, notes, your website, an about-me.</small><textarea id="sText" rows="5"></textarea></label>
+          <label class="f">Or add files <small>.txt, .md, .csv, .json</small><input id="sFile" type="file" accept=".txt,.md,.csv,.json,text/*" multiple></label>
+          <button class="btn y" type="submit">Add to Brain</button>
+        </form>
+      </section>
+      <section class="card" style="flex:2 1 560px" aria-labelledby="h-facts">
+        <div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 id="h-facts" style="margin:0">Facts it will use on stage</h2><span class="muted" id="factsNote"></span></div>
+        <div class="scroll"><table><thead><tr><th>Fact</th><th class="num">Value</th><th>From</th><th>Status</th></tr></thead><tbody id="facts"></tbody></table></div>
+        <p class="muted" style="margin:12px 0 0">Conflict = two sources disagree; it never goes on stage until you pick one. Check = the source is over 30 days old.</p>
+        <h2 style="margin:22px 0 10px">Names it will spotlight</h2>
+        <div id="names" class="row"></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="tab-runs" hidden>
+    <h1 id="runsTitle" style="margin:0 0 6px;font-family:Bungee,sans-serif;font-size:34px;line-height:1.1">Rehearsals and engines</h1>
+    <p class="muted" style="margin:0 0 22px;font-size:17px">Every time you run the mic or the demo in the Console, VoxInk records what it showed and how fast. Run once on each engine to compare them.</p>
+    <div class="row" style="align-items:stretch;gap:20px;margin-bottom:20px" id="compare"></div>
+    <div class="row" style="align-items:stretch;gap:20px">
+      <section class="card" style="flex:2 1 520px"><h2>Fix before you go live</h2><ul id="fixes" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px"></ul></section>
+      <section class="card" style="flex:1 1 320px"><h2>All runs</h2><div class="scroll"><table><thead><tr><th>When</th><th>Engine</th><th class="num">Visuals</th><th class="num">Avg</th></tr></thead><tbody id="runs"></tbody></table></div>
+      <button class="btn ghost" id="clearRuns" type="button" style="margin-top:12px">Clear run history</button></section>
+    </div>
+  </section>
+
+  <section id="tab-setup" hidden>
+    <h1 style="margin:0 0 6px;font-family:Bungee,sans-serif;font-size:34px">Setup</h1>
+    <p class="muted" style="margin:0 0 22px;font-size:17px">VoxInk works with no keys at all. Each key you add on the server switches on one paid part.</p>
+    <div class="card" style="margin-bottom:20px"><div class="scroll"><table><thead><tr><th>Part</th><th>Free</th><th>Paid (server key)</th><th>Status</th></tr></thead><tbody id="cfg"></tbody></table></div></div>
+    <div class="card"><h2>Speech language</h2>
+      <select id="lang" style="max-width:320px"><option value="en-IN">English (India)</option><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="hi-IN">Hindi (India)</option></select>
+      <p class="muted">Muted words (never acted out): <span id="mutes"></span></p>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="/src/studio/main.ts"></script>
+</body>
+</html>
